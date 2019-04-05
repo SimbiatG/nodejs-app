@@ -1,26 +1,23 @@
 const http = require('https');
-// const { get } = require('request');
+const axios = require('axios');
 const externalRequest = ( req, res) => {
-    const url = 'https://holidayapi.com/v1/holidays?key=e52bfe2d-c18b-4f16-8b16-02d99d0206ba';
+    const url = 'https://holidayapi.com/v1/holidays';
+    const params = {
+        country: 'NG',
+        key: '052bfe2d-c18b-4f16-8b16-02d99d0206ba',
+        day: '25',
+        month: '12',
+        year:'2018'
+    }
 
-    http.get(url, (response) =>{
-        let body = '';
-        response
-        .on('data', (chunk) => {
-            body += chunk.toString();
-        })
-        .on('end', () => {
-            const parsed = JSON.parse(body);
-            const holidays = parsed.data.map(holiday => ({
-                holiday_name: holiday.name
-            }));
-
-            res.json({
-                count: holidays.length,
-                holidays
-            });
-        })
-    });
+        axios.get(url, { params})
+            .then(response => {
+                res.json(response.data);
+            }, error => {
+                res.status(400)
+                res.json({message: error.message})
+            
+        });
 
 
 }
